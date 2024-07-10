@@ -17,9 +17,9 @@ LANG="ar"
 def Alexa_Speak(text,language=LANG):
     tts=gTTS(text=text,lang=language)
     tts.save("Speech.mp3")
-    #os.system("S.mp3")
     playsound.playsound("Speech.mp3",True)
     os.remove("Speech.mp3")
+
 
 #here make alexa listen to user
 def Alexa_Listen():
@@ -42,7 +42,7 @@ def Alexa_Listen():
         return command
     
     except sr.UnknownValueError:
-        print("Sorry, I didn't understand that.")
+        Alexa_Speak("عذرا لم أفهمك")  
         return ""
     
     except sr.RequestError as e:
@@ -53,22 +53,12 @@ def Alexa_Listen():
         print(f"An error occurred: {e}")
         return ""
 
-# listener=sr.Recognizer()
-# def Alexa_Listen():
-#     try:
-#         with sr.Microphone() as mic:
-#             speech=listener.listen(mic)
-#             command=listener.recognize_google_cloud(speech,language=LANG)
-#             print(command)
-#             #Alexa_Speak(command)
-#             return command
-#     except:
-#         Alexa_Speak("عذرا لم أفهمك")  
-#         return;  
+
 
 def Run_Alexa():
     finish=True
     while finish:
+        print("KeyWords You can use : [ ما هو , ما هي , ابحثي عن , كلميني عن , من هو , شغلي , افتحي ]")
         command=Alexa_Listen()
         if ("شكرا" in command) | ("باي" in command) | ("مع السلامه" in command) | ("سلام" in command):
             finish=False
@@ -76,10 +66,16 @@ def Run_Alexa():
             Alexa_Speak(".الساعة الان."+get_time())
         elif "تاريخ" in command:
             Alexa_Speak(".تاريخ اليوم هو."+get_date())
-           
+        elif ("ما هو" in command) | ("ما هي" in command)| ("عندي سؤال" in command) | ("ابحثي عن" in command):
+            Alexa_Speak(google_it(command))
+        elif ("من هو" in command) | ("من هي" in command)| ("كلميني عن" in command):
+           Alexa_Speak(ask_about(command))
+        elif ("اغنيه" in command) | ("موسيقى"  in command) | ("سوره" in command) | ("صوره" in command) | ("فيديو" in command) | ("على يوتيوب" in command) | ("افتحي" in command) | ("شغلي" in command):
+            Alexa_Speak(on_YouTube(command)) 
+            
+       
     Alexa_Speak("مع السلامة")
 
 Run_Alexa()
-#Alexa_Speak(".تاريخ اليوم هو."+get_date())
-#Alexa_Listen()
-#google_it("اليكسا ما هو طول رونالدو")
+#google_it("ما هي عاصمه فرنسا")
+#Alexa_Speak(google_it("ما هي عاصمه مصر"))

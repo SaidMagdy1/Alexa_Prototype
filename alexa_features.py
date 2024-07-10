@@ -2,32 +2,65 @@
 import datetime
 from bs4 import BeautifulSoup
 import requests
+import pywhatkit
+import wikipedia
+import pyjokes
+from googletrans import Translator, constants
 
+LANG="ar"
+wikipedia.set_lang(LANG) 
+header={
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:103.0) Gecko/20100101 Firefox/103.0"
+  }
 def get_time():
     return datetime.datetime.now().strftime("%H:%M:%S")
 
 def get_date():
     return datetime.datetime.now().strftime("%A %d/%m/%Y")
 
+
 def google_it(command):
     command=command.replace("اليكسا"," ")
-    #command=command.replace("ما هو"," ")
     command=command.replace("ابحثي عن"," ")
+    command=command.replace("عندي سؤال", " ")
     command=command.strip()
-    #url="https://www.google.com/search?q="+command
-    url = "https://www.google.com/search?q=%D9%85%D8%A7+%D9%87%D9%88+%D8%B7%D9%88%D9%84+%D8%B1%D9%88%D9%86%D8%A7%D9%84%D8%AF%D9%88&rlz=1C1ASVC_arEG948EG949&oq=&gs_lcrp=EgZjaHJvbWUqCQgAECMYJxjqAjIJCAAQIxgnGOoCMgkIARAjGCcY6gIyCQgCECMYJxjqAjIJCAMQIxgnGOoCMgkIBBAjGCcY6gIyDwgFEC4YJxjHARjqAhjRAzIJCAYQIxgnGOoCMgkIBxAjGCcY6gLSAQkyMzk3ajBqMTWoAgiwAgE&sourceid=chrome&ie=UTF-8"
-    it=requests.get(url)
+    print(command)
+    url="https://www.google.com/search?q="+command
+    it=requests.get(url,headers=header)
 
-    soup=BeautifulSoup(it.content,'html.parser')
-
-    height_element = soup.find("div", {"class": "Z0LcW"})
-    if height_element:
-        height = height_element.text
-        print(f"Cristiano Ronaldo's height: {height}")
+    soup=BeautifulSoup(it.content,'lxml')
+     
+    response=soup.find('div',class_="HwtpBd gsrt PZPZlf kTOYnf")
+    if response:
+        return response.text
     else:
-        print(soup.find("body").text)
+        return ("عذرا لم أفهمك")
 
-        
-    #response=soup.find("body").text
-    # response=soup.find("div",class_="GyAeWb").text
-    # print(response)
+def ask_about(command):
+    command = command.replace("كلميني عن", "")
+    command = command.replace("من هو", "")  
+    command = command.replace("من هي", "")       
+    command = command.replace("اليكسا", "")  
+    command=command.strip()  
+    print(command)
+    response = wikipedia.summary(command,1)
+    if response:
+        return response
+    else:
+        return ("عذرا لم أفهمك")
+
+
+def on_YouTube(command):
+    command = command.replace("اليكسا", "") 
+    command = command.replace("اغنيه", "")
+    command = command.replace("موسيقى", "")  
+    command = command.replace("سوره", "")       
+    command = command.replace("صوره" , "")  
+    command = command.replace("فيديو" , "")       
+    command = command.replace("على يوتيوب" , "") 
+    command = command.replace("افتحي" , "")       
+    command = command.replace("شغلي" , "") 
+    command=command.strip()  
+    response="حاضر ها هي" + command       
+    pywhatkit.playonyt(command)
+    return response
