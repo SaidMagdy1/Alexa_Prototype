@@ -33,6 +33,7 @@ def Alexa_Listen():
     
     try:
         with sr.Microphone() as source:
+            print("KeyWords You can use : [ ما هو , ما هي , ابحثي عن , كلميني عن , من هو , شغلي , افتحي ]")
             print("Listening...")
             audio = recognizer.listen(source)
             
@@ -58,7 +59,6 @@ def Alexa_Listen():
 def Run_Alexa():
     finish=True
     while finish:
-        print("KeyWords You can use : [ ما هو , ما هي , ابحثي عن , كلميني عن , من هو , شغلي , افتحي ]")
         command=Alexa_Listen()
         if ("شكرا" in command) | ("باي" in command) | ("مع السلامه" in command) | ("سلام" in command):
             finish=False
@@ -77,5 +77,4 @@ def Run_Alexa():
     Alexa_Speak("مع السلامة")
 
 Run_Alexa()
-#google_it("ما هي عاصمه فرنسا")
-#Alexa_Speak(google_it("ما هي عاصمه مصر"))
+
